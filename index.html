@@ -13,7 +13,7 @@ Usage:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Asus Business Product Spec Search</title>
+  <title>ASUS Business Product Spec Search</title>
   <style>
     /* Base */
     body {
@@ -37,8 +37,15 @@ Usage:
     }
     h1 {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.25rem;
       font-size: 1.75rem;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 1rem;
     }
     /* Input */
     #search {
@@ -104,7 +111,8 @@ Usage:
   <div class="container">
     <!-- ASUS Business Logo -->
     <img src="asus-logo.png" alt="ASUS Business Logo" class="logo">
-    <h1>Asus Business Product Spec Search</h1>
+    <h1>ASUS Business Product Spec Search</h1>
+    <p class="subtitle">Copyright © ASUS Indonesia Commercial Department</p>
     <input type="text" id="search" placeholder="範例 B1402CVA-NK7110X">
     <div id="results"><p class="message">Type a name to search (e.g. B1402CVA-NK7110X)</p></div>
     <!-- Footer with tutor image, shown after search -->
