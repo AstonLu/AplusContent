@@ -4,8 +4,8 @@ Includes ASUS Business logo at top & tutor image after search results
 
 Usage:
 1. Export your Excel as CSV named data.csv
-2. Place asus-logo.png & tutor.jpg in repo root
-3. Commit index.html, data.csv, asus-logo.png, tutor.jpg
+2. Place asus-logo.png & tutor.png in repo root
+3. Commit index.html, data.csv, asus-logo.png, tutor.png
 4. Enable GitHub Pages on main branch, root folder
 -->
 <!DOCTYPE html>
@@ -67,21 +67,25 @@ Usage:
     /* Specs list: label and value separate for easy copy */
     .spec {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
       padding: 0.75rem 1rem;
       border-bottom: 1px solid #eee;
     }
-    .spec:last-child {
-      border-bottom: none;
+    .spec:nth-child(odd) {
+      background-color: #fafafa;
     }
     .spec-label {
       font-weight: 600;
       color: #555;
       user-select: none;
+      width: 30%;
+      margin-right: 1rem;
+      text-align: left;
     }
     .spec-value {
       user-select: text;
-      text-align: right;
+      flex: 1;
+      text-align: left;
     }
     /* Footer tutor image */
     .footer {
@@ -90,7 +94,8 @@ Usage:
       display: none;
     }
     .footer img {
-      max-width: 450px;
+      max-width: 900px;
+      width: 100%;
       height: auto;
     }
   </style>
@@ -103,7 +108,7 @@ Usage:
     <input type="text" id="search" placeholder="範例 B1402CVA-NK7110X">
     <div id="results"><p class="message">Type a name to search (e.g. B1402CVA-NK7110X)</p></div>
     <!-- Footer with tutor image, shown after search -->
-    <div class="footer"><img src="tutor.jpg" alt="Tutor"></div>
+    <div class="footer"><img src="tutor.png" alt="Tutor"></div>
   </div>
 
   <!-- PapaParse for CSV parsing -->
