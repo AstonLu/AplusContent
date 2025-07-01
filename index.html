@@ -1,0 +1,127 @@
+<!--
+Product Spec Search Site (Vertical Layout & Styled)
+
+Usage:
+1. Export your Excel as CSV named data.csv
+2. Ensure README, LICENSE are optional
+3. Commit index.html & data.csv to repo root
+4. Enable GitHub Pages on main branch, root folder
+
+Future updates:
+- Overwrite data.csv and push → site auto-reloads
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product Spec Search</title>
+  <style>
+    /* Base */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.75rem;
+    }
+    /* Input */
+    #search {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    /* Results Card */
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 1.5rem;
+      overflow: hidden;
+    }
+    .card table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .card th,
+    .card td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    .card th {
+      background: #fafafa;
+      width: 35%;
+      text-align: left;
+      font-weight: 600;
+      color: #555;
+    }
+    .card tr:last-child td {
+      border-bottom: none;
+    }
+    /* Message */
+    .message {
+      text-align: center;
+      color: #777;
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Product Spec Search</h1>
+    <input type="text" id="search" placeholder="Enter Product Name">
+    <div id="results"><p class="message">Type a name to search</p></div>
+  </div>
+
+  <!-- PapaParse for CSV parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script>
+    let data = [];
+    // Load CSV
+    Papa.parse('data.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        data = results.data;
+      }
+    });
+    // Render functions
+    function renderMatch(row) {
+      let html = '<div class="card"><table>';
+      Object.entries(row).forEach(([key, value]) => {
+        html += `<tr><th>${key}</th><td>${value || '-'}</td></tr>`;
+      });
+      html += '</table></div>';
+      return html;
+    }
+    function showMessage(msg) {
+      return `<p class="message">${msg}</p>`;
+    }
+    // Search event
+    document.getElementById('search').addEventListener('input', function() {
+      const term = this.value.trim().toLowerCase();
+      const container = document.getElementById('results');
+      if (!term) {
+        container.innerHTML = showMessage('Type a name to search');
+        return;
+      }
+      const matched = data.find(r => (r['Product Name']||'').toLowerCase().includes(term));
+      container.innerHTML = matched ? renderMatch(matched) : showMessage('No product found');
+    });
+  </script>
+</body>
+</html>
