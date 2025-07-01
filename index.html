@@ -1,14 +1,12 @@
 <!--
 Product Spec Search Site (Vertical Layout & Styled)
+Includes ASUS Business logo at top & tutor image at bottom
 
 Usage:
 1. Export your Excel as CSV named data.csv
-2. Ensure README, LICENSE are optional
-3. Commit index.html & data.csv to repo root
+2. Place asus-logo.png & tutor.jpg in repo root
+3. Commit index.html, data.csv, asus-logo.png, tutor.jpg
 4. Enable GitHub Pages on main branch, root folder
-
-Future updates:
-- Overwrite data.csv and push → site auto-reloads
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +26,14 @@ Future updates:
     .container {
       max-width: 600px;
       margin: 0 auto;
+      position: relative;
+    }
+    /* Logo */
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+      max-width: 200px;
+      height: auto;
     }
     h1 {
       text-align: center;
@@ -77,13 +83,29 @@ Future updates:
       margin-top: 1.5rem;
       font-style: italic;
     }
+    /* Footer tutor image */
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .footer img {
+      max-width: 150px;
+      height: auto;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- ASUS Business Logo -->
+    <img src="asus-logo.png" alt="ASUS Business Logo" class="logo">
     <h1>Product Spec Search</h1>
     <input type="text" id="search" placeholder="Enter Product Name">
     <div id="results"><p class="message">Type a name to search</p></div>
+  </div>
+
+  <!-- Footer with tutor image -->
+  <div class="footer">
+    <img src="tutor.jpg" alt="Tutor">
   </div>
 
   <!-- PapaParse for CSV parsing -->
