@@ -49,6 +49,13 @@ Usage:
       border-radius: 4px;
       box-sizing: border-box;
     }
+    /* Message */
+    .message {
+      text-align: center;
+      color: #777;
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
     /* Results Card */
     .card {
       background: #fff;
@@ -57,31 +64,24 @@ Usage:
       margin-top: 1.5rem;
       overflow: hidden;
     }
-    .card table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .card th,
-    .card td {
+    /* Specs list: label and value separate for easy copy */
+    .spec {
+      display: flex;
+      justify-content: space-between;
       padding: 0.75rem 1rem;
       border-bottom: 1px solid #eee;
     }
-    .card th {
-      background: #fafafa;
-      width: 35%;
-      text-align: left;
-      font-weight: 600;
-      color: #555;
-    }
-    .card tr:last-child td {
+    .spec:last-child {
       border-bottom: none;
     }
-    /* Message */
-    .message {
-      text-align: center;
-      color: #777;
-      margin-top: 1.5rem;
-      font-style: italic;
+    .spec-label {
+      font-weight: 600;
+      color: #555;
+      user-select: none;
+    }
+    .spec-value {
+      user-select: text;
+      text-align: right;
     }
     /* Footer tutor image */
     .footer {
@@ -100,8 +100,8 @@ Usage:
     <!-- ASUS Business Logo -->
     <img src="asus-logo.png" alt="ASUS Business Logo" class="logo">
     <h1>Asus Business Product Spec Search</h1>
-    <input type="text" id="search" placeholder="Enter Product Name">
-    <div id="results"><p class="message">Type a name to search</p></div>
+    <input type="text" id="search" placeholder="範例 B1402CVA-NK7110X">
+    <div id="results"><p class="message">Type a name to search (e.g. B1402CVA-NK7110X)</p></div>
     <!-- Footer with tutor image, shown after search -->
     <div class="footer"><img src="tutor.jpg" alt="Tutor"></div>
   </div>
@@ -119,13 +119,13 @@ Usage:
         data = results.data;
       }
     });
-    // Render functions
+    // Render match as list of specs
     function renderMatch(row) {
-      let html = '<div class="card"><table>';
+      let html = '<div class="card">';
       Object.entries(row).forEach(([key, value]) => {
-        html += `<tr><th>${key}</th><td>${value || '-'}</td></tr>`;
+        html += `<div class="spec"><div class="spec-label">${key}</div><div class="spec-value">${value || '-'}</div></div>`;
       });
-      html += '</table></div>';
+      html += '</div>';
       return html;
     }
     function showMessage(msg) {
@@ -137,7 +137,7 @@ Usage:
       const container = document.getElementById('results');
       const footer = document.querySelector('.footer');
       if (!term) {
-        container.innerHTML = showMessage('Type a name to search');
+        container.innerHTML = showMessage('Type a name to search (e.g. B1402CVA-NK7110X)');
         footer.style.display = 'none';
         return;
       }
