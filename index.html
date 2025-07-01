@@ -1,6 +1,6 @@
 <!--
 Product Spec Search Site (Vertical Layout & Styled)
-Includes ASUS Business logo at top & tutor image at bottom
+Includes ASUS Business logo at top & tutor image after search results
 
 Usage:
 1. Export your Excel as CSV named data.csv
@@ -13,7 +13,7 @@ Usage:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Product Spec Search</title>
+  <title>Asus Business Product Spec Search</title>
   <style>
     /* Base */
     body {
@@ -87,9 +87,10 @@ Usage:
     .footer {
       text-align: center;
       margin-top: 2rem;
+      display: none;
     }
     .footer img {
-      max-width: 150px;
+      max-width: 450px;
       height: auto;
     }
   </style>
@@ -98,14 +99,11 @@ Usage:
   <div class="container">
     <!-- ASUS Business Logo -->
     <img src="asus-logo.png" alt="ASUS Business Logo" class="logo">
-    <h1>Product Spec Search</h1>
+    <h1>Asus Business Product Spec Search</h1>
     <input type="text" id="search" placeholder="Enter Product Name">
     <div id="results"><p class="message">Type a name to search</p></div>
-  </div>
-
-  <!-- Footer with tutor image -->
-  <div class="footer">
-    <img src="tutor.jpg" alt="Tutor">
+    <!-- Footer with tutor image, shown after search -->
+    <div class="footer"><img src="tutor.jpg" alt="Tutor"></div>
   </div>
 
   <!-- PapaParse for CSV parsing -->
@@ -137,12 +135,15 @@ Usage:
     document.getElementById('search').addEventListener('input', function() {
       const term = this.value.trim().toLowerCase();
       const container = document.getElementById('results');
+      const footer = document.querySelector('.footer');
       if (!term) {
         container.innerHTML = showMessage('Type a name to search');
+        footer.style.display = 'none';
         return;
       }
       const matched = data.find(r => (r['Product Name']||'').toLowerCase().includes(term));
       container.innerHTML = matched ? renderMatch(matched) : showMessage('No product found');
+      footer.style.display = 'block';
     });
   </script>
 </body>
