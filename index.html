@@ -18,8 +18,10 @@ Usage:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ASUS Business Product Spec Search</title>
   <style>
+    .header { text-align: center; }
+
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f6f8; margin:0; padding:2rem; color:#333; }
-    .container { max-width:800px; margin:0 auto; }
+    .container { max-width:800px; margin:0 auto; overflow-x: hidden; }
     .logo { display:block; margin:0 auto 1rem; max-width:200px; }
     h1 { text-align:center; margin:0 0 .5rem; font-size:2rem; text-transform:uppercase; }
     .subtitle { text-align:center; font-size:.875rem; color:#666; margin-bottom:1.5rem; }
@@ -52,9 +54,11 @@ Usage:
 </head>
 <body>
   <div class="container">
+      <div class="header">
     <img src="asus-logo.png" class="logo" alt="ASUS Business Logo">
     <h1>ASUS Business Product Spec Search</h1>
-    <p class="subtitle">Copyright © ASUS Indonesia Commercial Department</p>
+    $1
+      </div> <!-- .header -->
     <div class="search-container">
       <input id="search" placeholder="e.g. B1402CVA-NK7110X">
       <button id="clearBtn">×</button>
