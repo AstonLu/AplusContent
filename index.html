@@ -4,10 +4,10 @@ Specs and Materials now in vertical sections; clicking Tutor image opens lightbo
 
 Usage:
 1. CSV: data.csv with headers exactly:
-   Product Name, Marketing name, Tagline, KSP, Title, CPU, GPU, OS,
+   Product Name, Marketing name, Tagline, KSP, Link, Title, CPU, GPU, OS,
    Panel Size, Reslolution, Brightness, RAM, SSD, IO Port,
    Weight (with Battery), Size, Expansion Slot, Include in the box,
-   Battery, Power Supply, Security, Material Link
+   Battery, Power Supply, Security
 2. Files in repo root: index.html, data.csv, asus-logo.png, tutor.jpg
 3. Enable GitHub Pages on main branch, root folder.
 -->
@@ -19,7 +19,6 @@ Usage:
   <title>ASUS Business Product Spec Search</title>
   <style>
     .header { text-align: center; }
-
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f6f8; margin:0; padding:2rem; color:#333; }
     .container { max-width:800px; margin:0 auto; overflow-x: hidden; }
     .logo { display:block; margin:0 auto 1rem; max-width:200px; }
@@ -34,56 +33,17 @@ Usage:
     .history span:hover { background:#ccc; }
     .message { text-align:center; color:#777; margin:1rem 0; font-style:italic; }
     .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; }
-    .section h2 {
-      margin: 0 0 1rem;
-      font-size: 1.25rem;
-      /* 已移除底線 */
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-    .spec {
-      display: grid;
-      grid-template-columns: 150px 1fr;
-      align-items: start;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #eee;
-    }
+    .section h2 { margin:0 0 1rem; font-size:1.25rem; }
+    .spec { display:grid; grid-template-columns:150px 1fr; align-items:start; padding:.75rem 1rem; border-bottom:1px solid #eee; }
     .spec:last-child { border-bottom:none; }
-    .spec-label {
-      font-weight: 600;
-      color: #555;
-      user-select: none;
-      /* 已移除虛線分隔 */
-      padding-right: 1rem;
-      width: 150px;
-      border-right: none;
-    }
-    .spec-value {
-      user-select: text;
-      color: #333;
-      padding-left: 1rem;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    
+    .spec-label { font-weight:600; color:#555; user-select:none; padding-right:1rem; width:150px; }
+    .spec-value { user-select:text; color:#333; padding-left:1rem; white-space:pre-wrap; word-break:break-word; }
     .spec.multiline .spec-value { margin:.25rem 0 0; }
-    .link-content a {
-      display: inline-block;
-      background-color: #0072c6;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-    }
-    .link-content a:hover {
-      background-color: #005fa3;
-    }
-    .link-content a:hover { text-decoration:underline; }
+    .link-content p { margin:0 0 .5rem; color:#555; font-size:.875rem; }
+    .link-content a { display:inline-block; background:#0072c6; color:#fff; text-decoration:none; font-weight:600; padding:.5rem 1rem; border-radius:4px; transition:background 0.2s; }
+    .link-content a:hover { background:#005fa3; }
     .tutor-box img { width:100%; height:auto; cursor:zoom-in; display:block; border-radius:4px; }
-    /* Lightbox */
-    .modal { display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); align-items:center; justify-content:center; }
+    .modal { display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; }
     .modal img { max-width:90%; max-height:90%; border-radius:4px; }
     .modal-close { position:absolute; top:1rem; right:1rem; font-size:2rem; color:#fff; cursor:pointer; }
     .retryBtn { display:block; margin:1.5rem auto 0; padding:.5rem 1rem; border:none; border-radius:4px; background:#0072c6; color:#fff; cursor:pointer; }
@@ -92,11 +52,11 @@ Usage:
 </head>
 <body>
   <div class="container">
-      <div class="header">
-    <img src="asus-logo.png" class="logo" alt="ASUS Business Logo">
-    <h1>ASUS Business Product Spec Search</h1>
-    <p class="subtitle">Copyright © ASUS Indonesia Commercial Department</p>
-      </div> <!-- .header -->
+    <div class="header">
+      <img src="asus-logo.png" class="logo" alt="ASUS Business Logo">
+      <h1>ASUS Business Product Spec Search</h1>
+      <p class="subtitle">Copyright © ASUS Indonesia Commercial Department</p>
+    </div>
     <div class="search-container">
       <input id="search" placeholder="e.g. B1402CVA-NK7110X">
       <button id="clearBtn">×</button>
@@ -111,15 +71,14 @@ Usage:
       <div class="section" id="materials-section">
         <h2>MATERIALS</h2>
         <div class="link-content" id="link-content">
-        <p style="margin:0 0 0.5rem; color:#555; font-size:0.875rem;">點擊下方按鈕下載或查看相關素材。</p></div>
+          <p>點擊下方按鈕下載或查看相關素材。</p>
+        </div>
         <div class="tutor-box" style="margin-top:1rem;"><img id="tutor-img" src="tutor.jpg" alt="Tutor"></div>
       </div>
     </div>
     <button class="retryBtn" id="retryBtn" style="display:none;">🔍 Search Again</button>
   </div>
-  <!-- Lightbox Modal -->
   <div id="modal" class="modal"><span id="modal-close" class="modal-close">&times;</span><img id="modal-img" src=""></div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script>
     let data = [];
@@ -138,57 +97,45 @@ Usage:
     const modalClose=document.getElementById('modal-close');
 
     function renderMatch(row) {
-      // Specs
-      cardDiv.innerHTML='';
-      Object.entries(row).forEach(([k,v])=>{
-        if(k==='Material Link') return;
-        const spec=document.createElement('div');
-        const multi=['KSP','Security'].includes(k);
-        spec.className='spec'+(multi?' multiline':'');
-        const label=document.createElement('div'); label.className='spec-label'; label.textContent=k;
-        const value=document.createElement('div'); value.className='spec-value';
-        if(multi) {
+      cardDiv.innerHTML = '';
+      Object.entries(row).forEach(([k,v]) => {
+        if (k === 'Link') return;
+        const spec = document.createElement('div');
+        const multi = ['KSP','Security'].includes(k);
+        spec.className = 'spec' + (multi?' multiline':'');
+        const label = document.createElement('div'); label.className='spec-label'; label.textContent=k;
+        const value = document.createElement('div'); value.className='spec-value';
+        if (multi) {
           (v||'').split(/\r?\n/).forEach(line=>{ const d=document.createElement('div'); d.textContent=line; value.appendChild(d); });
         } else {
-          value.textContent=v||'-';
+          value.textContent = v||'-';
         }
         spec.append(label,value);
         cardDiv.append(spec);
       });
-      // Material Link
-      linkContent.innerHTML='';
-      const link=row['Material Link'];
-      if(link) {
-        const a=document.createElement('a'); a.href=link; a.target='_blank'; a.textContent='Visit Link'; linkContent.append(a);
+      linkContent.innerHTML = '';
+      const link = row['Link'];
+      if (link) {
+        const a = document.createElement('a'); a.href=link; a.target='_blank'; a.textContent='Visit Link'; linkContent.append(a);
       } else linkContent.textContent='Coming Soon';
-      // Show sections
       messageEl.style.display='none'; resultsWrapper.style.display='block'; clearBtn.style.display='block'; retryBtn.style.display='block';
     }
-
     function reset() {
       input.value=''; historyEl.innerHTML=''; messageEl.textContent='Type a name to search (e.g. B1402CVA-NK7110X)'; messageEl.style.display=''; resultsWrapper.style.display='none'; clearBtn.style.display='none'; retryBtn.style.display='none'; input.focus();
     }
-
     clearBtn.addEventListener('click', reset);
     retryBtn.addEventListener('click', reset);
-
     input.addEventListener('input', ()=>{
       const term=input.value.trim().toLowerCase();
       clearBtn.style.display=term?'block':'none';
-      if(!term) { reset(); return; }
-      const row=data.find(r=>(r['Product Name']||'').toLowerCase().includes(term));
-      if(row) renderMatch(row);
+      if (!term) { reset(); return; }
+      const row = data.find(r => (r['Product Name']||'').toLowerCase().includes(term));
+      if (row) renderMatch(row);
       else { messageEl.textContent='No product found'; messageEl.style.display=''; resultsWrapper.style.display='none'; clearBtn.style.display='block'; retryBtn.style.display='block'; }
     });
-
-    // Tutor image click to enlarge
-    tutorImg.addEventListener('click', ()=>{
-      modalImg.src = tutorImg.src;
-      modal.style.display = 'flex';
-    });
+    tutorImg.addEventListener('click', ()=>{ modalImg.src = tutorImg.src; modal.style.display='flex'; });
     modalClose.addEventListener('click', ()=>{ modal.style.display='none'; });
-    modal.addEventListener('click', e=>{ if(e.target === modal) modal.style.display='none'; });
-
+    modal.addEventListener('click', e=>{ if (e.target===modal) modal.style.display='none'; });
     input.focus();
   </script>
 </body>
