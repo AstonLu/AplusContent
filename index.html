@@ -53,9 +53,10 @@ Usage:
       font-weight: 600;
       color: #555;
       user-select: none;
+      /* 已移除虛線分隔 */
       padding-right: 1rem;
-      border-right: 1px dashed #ddd;
       width: 150px;
+      border-right: none;
     }
     .spec-value {
       user-select: text;
@@ -66,7 +67,19 @@ Usage:
     }
     
     .spec.multiline .spec-value { margin:.25rem 0 0; }
-    .link-content a { color:#0072c6; text-decoration:none; font-weight:600; }
+    .link-content a {
+      display: inline-block;
+      background-color: #0072c6;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+    .link-content a:hover {
+      background-color: #005fa3;
+    }
     .link-content a:hover { text-decoration:underline; }
     .tutor-box img { width:100%; height:auto; cursor:zoom-in; display:block; border-radius:4px; }
     /* Lightbox */
@@ -97,7 +110,8 @@ Usage:
       </div>
       <div class="section" id="materials-section">
         <h2>MATERIALS</h2>
-        <div class="link-content" id="link-content"></div>
+        <div class="link-content" id="link-content">
+        <p style="margin:0 0 0.5rem; color:#555; font-size:0.875rem;">點擊下方按鈕下載或查看相關素材。</p></div>
         <div class="tutor-box" style="margin-top:1rem;"><img id="tutor-img" src="tutor.jpg" alt="Tutor"></div>
       </div>
     </div>
