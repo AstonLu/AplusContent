@@ -1,16 +1,16 @@
 <!--
-Product Spec Search Site (Vertical Layout & Styled)
-Includes ASUS Business logo, clear/retry buttons, and search history
+Product Spec Search Site (Two-Column Layout & Styled)
+Includes ASUS Business logo, clear/retry buttons, search history,
+with specs list on left and Material Link + tutor sidebar on right.
 
 Usage:
-1. Export your Excel as CSV named data.csv with these headers exactly:
+1. Export Excel as CSV named data.csv with headers exactly:
    Product Name, Marketing name, Tagline, KSP, Title, CPU, GPU, OS,
    Panel Size, Reslolution, Brightness, RAM, SSD, IO Port,
    Weight (with Battery), Size, Expansion Slot, Include in the box,
    Battery, Power Supply, Security, Material Link
-2. Place asus-logo.png & tutor.jpg in repo root
-3. Commit index.html, data.csv, asus-logo.png, tutor.jpg
-4. Enable GitHub Pages on main branch, root folder
+2. Add files to repo root: index.html, data.csv, asus-logo.png, tutor.jpg
+3. Enable GitHub Pages on main branch, root folder.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -26,31 +26,153 @@ Usage:
       margin: 0;
       padding: 2rem;
     }
-    .container { max-width: 600px; margin: 0 auto; position: relative; }
-    .logo { display: block; margin: 0 auto 1rem; max-width: 200px; height: auto; }
-    h1 { text-align: center; margin-bottom: 0.25rem; font-size: 1.75rem; text-transform: uppercase; }
-    .subtitle { text-align: center; font-size: 0.875rem; color: #666; margin-bottom: 1rem; }
-    .search-container { position: relative; }
-    #search { width: 100%; padding: 0.75rem 1rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    #clearBtn { position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: transparent; border: none; font-size: 1.25rem; cursor: pointer; color: #888; display: none; }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+      max-width: 250px;
+      height: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 0.25rem;
+      font-size: 2rem;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    .search-container {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto 1rem;
+    }
+    #search {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    #clearBtn {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #888;
+      display: none;
+    }
     #clearBtn:hover { color: #555; }
-    .history { margin-top: 0.5rem; font-size: 0.875rem; color: #555; }
-    .history span { display: inline-block; background: #e1e1e1; color: #333; padding: 0.25rem 0.5rem; margin: 0.125rem; border-radius: 4px; cursor: pointer; }
+    .history {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #555;
+      text-align: center;
+    }
+    .history span {
+      display: inline-block;
+      background: #e1e1e1;
+      color: #333;
+      padding: 0.25rem 0.5rem;
+      margin: 0.125rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
     .history span:hover { background: #ccc; }
-    .message { text-align: center; color: #777; margin-top: 1.5rem; font-style: italic; }
-    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 1.5rem; overflow: hidden; }
-    .spec { display: flex; align-items: flex-start; padding: 0.75rem 1rem; border-bottom: 1px solid #ddd; }
+    .message {
+      text-align: center;
+      color: #777;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+    .results-wrap {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .card {
+      flex: 2;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .spec {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+    }
     .spec:nth-child(odd) { background-color: #fafafa; }
-    .spec-label { font-weight: 600; color: #555; user-select: none; min-width: 120px; flex-shrink: 0; text-align: left; padding: 0; }
-    .spec-value { user-select: text; flex: 1; text-align: left; padding-left: 1rem; }
-    /* multiline specs wrap */
-    .spec.multiline { flex-direction: column; align-items: flex-start; }
-    .spec.multiline .spec-label { margin-bottom: 0.25rem; min-width: auto; padding: 0; }
-    .spec.multiline .spec-value { padding-left: 0; }
-    .retryBtn { display: block; margin: 1rem auto; padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #0072c6; color: #fff; font-size: 1rem; cursor: pointer; }
+    .spec-label {
+      font-weight: 600;
+      color: #555;
+      user-select: none;
+      min-width: 150px;
+      flex-shrink: 0;
+      text-align: left;
+    }
+    .spec-value {
+      user-select: text;
+      flex: 1;
+      text-align: left;
+      margin-left: 1rem;
+    }
+    .spec.multiline { flex-direction: column; }
+    .spec.multiline .spec-label { margin-bottom: 0.25rem; }
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .sidebar .link-box, .sidebar .tutor-box {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1rem;
+    }
+    .link-box h2, .tutor-box h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      color: #333;
+    }
+    .link-box a {
+      display: inline-block;
+      color: #0072c6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .link-box a:hover { text-decoration: underline; }
+    .tutor-box img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .retryBtn {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #0072c6;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
     .retryBtn:hover { background-color: #005fa3; }
-    .footer { text-align: center; margin-top: 2rem; display: none; }
-    .footer img { max-width: 900px; width: 100%; height: auto; }
+    .footer { display: none; }
   </style>
 </head>
 <body>
@@ -63,10 +185,17 @@ Usage:
       <button id="clearBtn">×</button>
     </div>
     <div class="history" id="history"></div>
-    <div id="results"><p class="message">Type a name to search (e.g. B1402CVA-NK7110X)</p></div>
+    <div class="message" id="message">Type a name to search (e.g. B1402CVA-NK7110X)</div>
+    <div class="results-wrap" id="results-wrap" style="display:none;">
+      <div class="card" id="card"></div>
+      <div class="sidebar">
+        <div class="link-box" id="link-box"><h2>Material Link</h2><div id="link-content"></div></div>
+        <div class="tutor-box"><h2>Tutor</h2><img src="tutor.jpg" alt="Tutor"></div>
+      </div>
+    </div>
     <button class="retryBtn" id="retryBtn" style="display:none;">🔍 Search Again</button>
-    <div class="footer"><img src="tutor.jpg" alt="Tutor"></div>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script>
     let data = [], history = [];
@@ -75,17 +204,84 @@ Usage:
     const clearBtn = document.getElementById('clearBtn');
     const retryBtn = document.getElementById('retryBtn');
     const historyEl = document.getElementById('history');
-    const results = document.getElementById('results');
-    const footer = document.querySelector('.footer');
-    Papa.parse('data.csv', { download: true, header: true, skipEmptyLines: true, complete: r => data = r.data });
-    function updateHistory(term) { if (!term || history.includes(term)) return; history.unshift(term); if (history.length > maxHistory) history.pop(); renderHistory(); }
-    function renderHistory() { historyEl.innerHTML = history.map(t => `<span>${t}</span>`).join(''); historyEl.querySelectorAll('span').forEach(el => el.addEventListener('click', () => { input.value = el.textContent; input.dispatchEvent(new Event('input')); })); }
-    function renderMatch(row) { let html = '<div class="card">'; Object.entries(row).forEach(([k, v]) => { const isLink = k === 'Material Link'; const isMulti = ['KSP','IO Port','Security'].includes(k); const cls = isLink || isMulti ? 'spec multiline' : 'spec'; if (isLink) { if (v) html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value"><a href="${v}" target="_blank">Link</a></div></div>`; else html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">Coming Soon</div></div>`; } else if (isMulti) { const lines = (v || '').split(/\r?\n/).map(line => `<div>${line}</div>`).join(''); html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">${lines}</div></div>`; } else html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">${v||'-'}</div></div>`; }); html += '</div>'; return html; }
-    function showMessage(msg) { return `<p class="message">${msg}</p>`; }
-    function resetSearch() { input.value = ''; results.innerHTML = showMessage('Type a name to search (e.g. B1402CVA-NK7110X)'); clearBtn.style.display = 'none'; retryBtn.style.display = 'none'; footer.style.display = 'none'; input.focus(); }
-    clearBtn.addEventListener('click', resetSearch);
-    retryBtn.addEventListener('click', resetSearch);
-    input.addEventListener('input', () => { const term = input.value.trim(); clearBtn.style.display = term ? 'block' : 'none'; if (!term) { results.innerHTML = showMessage('Type a name to search (e.g. B1402CVA-NK7110X)'); retryBtn.style.display='none'; footer.style.display='none'; return; } const found = data.find(r => (r['Product Name']||'').toLowerCase().includes(term.toLowerCase())); results.innerHTML = found ? renderMatch(found) : showMessage('No product found'); retryBtn.style.display='block'; footer.style.display='block'; updateHistory(term); });
+    const messageEl = document.getElementById('message');
+    const resultsWrap = document.getElementById('results-wrap');
+    const card = document.getElementById('card');
+    const linkContent = document.getElementById('link-content');
+
+    Papa.parse('data.csv', { download: true, header: true, skipEmptyLines: true,
+      complete: r => { data = r.data; }
+    });
+
+    function renderMatch(row) {
+      // specs
+      card.innerHTML = '';
+      Object.entries(row).forEach(([k, v]) => {
+        if (k === 'Material Link') return;
+        const isMulti = ['KSP','IO Port','Security'].includes(k);
+        const spec = document.createElement('div');
+        spec.className = 'spec' + (isMulti ? ' multiline' : '');
+        const label = document.createElement('div');
+        label.className = 'spec-label'; label.textContent = k;
+        const value = document.createElement('div');
+        value.className = 'spec-value';
+        if (isMulti) {
+          (v || '').split(/\r?\n/).forEach(line => {
+            const d = document.createElement('div'); d.textContent = line;
+            value.appendChild(d);
+          });
+        } else {
+          value.textContent = v || '-';
+        }
+        spec.appendChild(label);
+        spec.appendChild(value);
+        card.appendChild(spec);
+      });
+      // material link
+      linkContent.innerHTML = '';
+      const link = row['Material Link'];
+      if (link) {
+        const a = document.createElement('a'); a.href = link;
+        a.target = '_blank'; a.textContent = 'Visit Link';
+        linkContent.appendChild(a);
+      } else {
+        linkContent.textContent = 'Coming Soon';
+      }
+      // show
+      messageEl.style.display = 'none';
+      resultsWrap.style.display = 'flex';
+      clearBtn.style.display = 'block';
+      retryBtn.style.display = 'block';
+    }
+
+    function reset() {
+      input.value = '';
+      historyEl.innerHTML = '';
+      messageEl.style.display = '';
+      resultsWrap.style.display = 'none';
+      clearBtn.style.display = 'none';
+      retryBtn.style.display = 'none';
+      messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
+      input.focus();
+    }
+
+    clearBtn.addEventListener('click', reset);
+    retryBtn.addEventListener('click', reset);
+
+    input.addEventListener('input', () => {
+      const term = input.value.trim().toLowerCase();
+      if (!term) { reset(); return; }
+      const row = data.find(r => (r['Product Name']||'').toLowerCase().includes(term));
+      if (row) renderMatch(row);
+      else {
+        messageEl.textContent = 'No product found';
+        messageEl.style.display = '';
+        resultsWrap.style.display = 'none';
+        clearBtn.style.display = 'block';
+        retryBtn.style.display = 'block';
+      }
+    });
+
     input.focus();
   </script>
 </body>
