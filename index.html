@@ -43,6 +43,10 @@ Usage:
     .spec-label { font-weight: 600; color: #555; user-select: none;
       width: 30%; margin-right: 1rem; text-align: left; }
     .spec-value { user-select: text; flex: 1; text-align: left; }
+    /* Wrap specific specs on new lines */
+    .spec.multiline { flex-direction: column; align-items: flex-start; }
+    .spec.multiline .spec-label { width: auto; margin-bottom: 0.25rem; }
+    .spec.multiline .spec-value { width: 100%; }
     .retryBtn { display: block; margin: 1rem auto; padding: 0.5rem 1rem;
       border: none; border-radius: 4px; background-color: #0072c6; color: #fff;
       font-size: 1rem; cursor: pointer; }
@@ -99,14 +103,17 @@ Usage:
     function renderMatch(row) {
       let html = '<div class="card">';
       Object.entries(row).forEach(([k, v]) => {
-        if (k === 'Material Link') {
+        const isLink = k === 'Material Link';
+        const isMulti = ['KSP','IO Port','Security'].includes(k);
+        const cls = isLink || isMulti ? 'spec multiline' : 'spec';
+        if (isLink) {
           if (v) {
-            html += `<div class="spec"><div class="spec-label">${k}</div><div class="spec-value"><a href="${v}" target="_blank">Link</a></div></div>`;
+            html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value"><a href="${v}" target="_blank">Link</a></div></div>`;
           } else {
-            html += `<div class="spec"><div class="spec-label">${k}</div><div class="spec-value">Coming Soon</div></div>`;
+            html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">Coming Soon</div></div>`;
           }
         } else {
-          html += `<div class="spec"><div class="spec-label">${k}</div><div class="spec-value">${v || '-'}</div></div>`;
+          html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">${v || '-'}</div></div>`;
         }
       });
       html += '</div>';
