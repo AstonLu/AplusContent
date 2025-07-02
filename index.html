@@ -36,20 +36,29 @@ Usage:
     .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; }
     .section h2 { margin:0 0 1rem; font-size:1.25rem; border-bottom:1px solid #eee; padding-bottom:.5rem; }
     .spec {
-      display:flex; flex-wrap:wrap; padding:.5rem 0; border-bottom:1px solid #eee; overflow:hidden; display:flex; flex-wrap:wrap; padding:.5rem 0; border-bottom:1px solid #eee; }
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      align-items: start;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+    }
     .spec:last-child { border-bottom:none; }
-    .spec-label { width:150px; flex-shrink:0; font-weight:600; color:#555; }
+    .spec-label {
+      font-weight: 600;
+      color: #555;
+      user-select: none;
+      padding-right: 1rem;
+      border-right: 1px dashed #ddd;
+      width: 150px;
+    }
     .spec-value {
-      /* 固定寬度以防溢出，並允許內部換行 */
-      flex: none;
-      width: calc(100% - 150px);
-      margin-left: 1rem;
+      user-select: text;
       color: #333;
+      padding-left: 1rem;
       white-space: pre-wrap;
       word-break: break-word;
-      user-select: text;
     }
-    .spec.multiline { flex-direction:column; }
+    
     .spec.multiline .spec-value { margin:.25rem 0 0; }
     .link-content a { color:#0072c6; text-decoration:none; font-weight:600; }
     .link-content a:hover { text-decoration:underline; }
