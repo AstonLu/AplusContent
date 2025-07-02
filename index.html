@@ -34,7 +34,13 @@ Usage:
     .history span:hover { background:#ccc; }
     .message { text-align:center; color:#777; margin:1rem 0; font-style:italic; }
     .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; }
-    .section h2 { margin:0 0 1rem; font-size:1.25rem; border-bottom:1px solid #eee; padding-bottom:.5rem; }
+    .section h2 {
+      margin: 0 0 1rem;
+      font-size: 1.25rem;
+      /* 已移除底線 */
+      border-bottom: none;
+      padding-bottom: 0;
+    }
     .spec {
       display: grid;
       grid-template-columns: 150px 1fr;
