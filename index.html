@@ -19,40 +19,150 @@ Usage:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ASUS Business Product Spec Search</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f4f6f8; color: #333; margin: 0; padding: 2rem; }
-    .container { max-width: 600px; margin: 0 auto; position: relative; }
-    .logo { display: block; margin: 0 auto 1rem; max-width: 200px; height: auto; }
-    h1 { text-align: center; margin-bottom: 0.25rem; font-size: 1.75rem; text-transform: uppercase; }
-    .subtitle { text-align: center; font-size: 0.875rem; color: #666; margin-bottom: 1rem; }
-    .search-container { position: relative; }
-    #search { width: 100%; padding: 0.75rem 1rem; font-size: 1rem;
-      border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    #clearBtn { position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
-      background: transparent; border: none; font-size: 1.25rem; cursor: pointer; color: #888; display: none; }
-    #clearBtn:hover { color: #555; }
-    .history { margin-top: 0.5rem; font-size: 0.875rem; color: #555; }
-    .history span { display: inline-block; background: #e1e1e1; color: #333;
-      padding: 0.25rem 0.5rem; margin: 0.125rem; border-radius: 4px; cursor: pointer; }
-    .history span:hover { background: #ccc; }
-    .message { text-align: center; color: #777; margin-top: 1.5rem; font-style: italic; }
-    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 1.5rem; overflow: hidden; }
-    .spec { display: flex; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; }
-    .spec:nth-child(odd) { background-color: #fafafa; }
-    .spec-label { font-weight: 600; color: #555; user-select: none;
-      width: 30%; margin-right: 1rem; text-align: left; }
-    .spec-value { user-select: text; flex: 1; text-align: left; }
-    /* Wrap specific specs on new lines */
-    .spec.multiline { flex-direction: column; align-items: flex-start; }
-    .spec.multiline .spec-label { width: auto; margin-bottom: 0.25rem; }
-    .spec.multiline .spec-value { width: 100%; }
-    .retryBtn { display: block; margin: 1rem auto; padding: 0.5rem 1rem;
-      border: none; border-radius: 4px; background-color: #0072c6; color: #fff;
-      font-size: 1rem; cursor: pointer; }
-    .retryBtn:hover { background-color: #005fa3; }
-    .footer { text-align: center; margin-top: 2rem; display: none; }
-    .footer img { max-width: 900px; width: 100%; height: auto; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+      max-width: 200px;
+      height: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 0.25rem;
+      font-size: 1.75rem;
+      text-transform: uppercase;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.875rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .search-container {
+      position: relative;
+    }
+    #search {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    #clearBtn {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #888;
+      display: none;
+    }
+    #clearBtn:hover {
+      color: #555;
+    }
+    .history {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #555;
+    }
+    .history span {
+      display: inline-block;
+      background: #e1e1e1;
+      color: #333;
+      padding: 0.25rem 0.5rem;
+      margin: 0.125rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .history span:hover {
+      background: #ccc;
+    }
+    .message {
+      text-align: center;
+      color: #777;
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 1.5rem;
+      overflow: hidden;
+    }
+    .spec {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    .spec:nth-child(odd) {
+      background-color: #fafafa;
+    }
+    .spec-label {
+      font-weight: 600;
+      color: #555;
+      user-select: none;
+      width: 30%;
+      margin-right: 1rem;
+      text-align: left;
+    }
+    .spec-value {
+      user-select: text;
+      flex: 1;
+      text-align: left;
+    }
+    /* multiline specs wrap */
+    .spec.multiline {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .spec.multiline .spec-label {
+      width: auto;
+      margin-bottom: 0.25rem;
+    }
+    .spec.multiline .spec-value {
+      width: 100%;
+    }
+    .retryBtn {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #0072c6;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .retryBtn:hover {
+      background-color: #005fa3;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      display: none;
+    }
+    .footer img {
+      max-width: 900px;
+      width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
@@ -84,7 +194,7 @@ Usage:
     const footer = document.querySelector('.footer');
 
     Papa.parse('data.csv', { download: true, header: true, skipEmptyLines: true,
-      complete: r => data = r.data
+      complete: (r) => { data = r.data; }
     });
 
     function updateHistory(term) {
@@ -112,6 +222,9 @@ Usage:
           } else {
             html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">Coming Soon</div></div>`;
           }
+        } else if (isMulti) {
+          const lines = (v || '').split(/\r?\n/).map(line => `<div>${line}</div>`).join('');
+          html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">${lines}</div></div>`;
         } else {
           html += `<div class="${cls}"><div class="spec-label">${k}</div><div class="spec-value">${v || '-'}</div></div>`;
         }
@@ -137,7 +250,7 @@ Usage:
         retryBtn.style.display = 'none'; footer.style.display = 'none';
         return;
       }
-      const found = data.find(r => (r['Product Name'] || '').toLowerCase().includes(term.toLowerCase()));
+      const found = data.find(r => (r['Product Name']||'').toLowerCase().includes(term.toLowerCase()));
       results.innerHTML = found ? renderMatch(found) : showMessage('No product found');
       retryBtn.style.display = 'block'; footer.style.display = 'block';
       updateHistory(term);
