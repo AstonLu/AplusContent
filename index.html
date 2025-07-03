@@ -43,7 +43,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <img src="asus-logo.png" class="logo" alt="ASUS Business Logo">
+      <img src="asus-logo.png" class="logo" alt="ASUS Business Product Spec Search">
       <h1>ASUS Business Product Spec Search</h1>
       <p class="subtitle">Copyright © ASUS Indonesia Commercial Department</p>
     </div>
@@ -83,7 +83,7 @@
   </div>
 
   <div id="modal" class="modal">
-    <span id="modal-close" class="modal-close">&times;</span>
+    <span id="modal-close" class="modal-close">×</span>
     <img id="modal-img">
   </div>
 
@@ -107,7 +107,10 @@
 
     input.disabled = true;
     messageEl.textContent = 'Loading data, please wait...';
-    Papa.parse('A+ Content Source(ForWeb).csv', { download:true, header:true, skipEmptyLines:true,
+    Papa.parse('A+ Content Source(ForWeb).csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
       complete: ({ data: d }) => {
         data = d;
         input.disabled = false;
@@ -139,47 +142,30 @@
 
       // Info & Spec
       let html = '';
-      // Tagline
       html += `<div class="line">${r['Tagline'] || '-'}</div><br>`;
-      // KSP
-      (r['KSP'] || '').split(/
-?
-/).forEach(line => {
+      (r['KSP'] || '').split(/\r?\n/).forEach(line => {
         html += `<div class="line">${line}</div>`;
       });
       html += '<br>';
-      // SPEC fields
       const keys = ['CPU','GPU','OS','Panel Size','Resolution','Brightness','RAM','SSD'];
       keys.forEach(k => {
         html += `<div class="line">${k}: ${r[k] || '-'}</div>`;
       });
-      // IO Port with newline before values
       html += '<div class="line">IO Port:</div>';
       (r['IO Port'] || '').split(/\r?\n/).forEach(line => {
         html += `<div class="line">${line}</div>`;
       });
-      // Expansion Slot same treatment
       html += '<div class="line">Expansion Slot:</div>';
       (r['Expansion Slot'] || '').split(/\r?\n/).forEach(line => {
         html += `<div class="line">${line}</div>`;
       });
-      // Remaining specs
-      const rest = ['Weight (with Battery)','Size','Include in the box','Battery','Power Supply','Security'];
-      rest.forEach(k => {
-        if (k === 'Security') {
-          html += '<div class="line">Security:</div>';
-          (r['Security'] || '').split(/
-?
-/).forEach(line => {
-            html += `<div class="line">${line}</div>`;
-          });
-        } else {
-          html += `<div class="line">${k}: ${r[k] || '-'}</div>`;
-        }
+      html += '<div class="line">Security:</div>';
+      (r['Security'] || '').split(/\r?\n/).forEach(line => {
+        html += `<div class="line">${line}</div>`;
       });
       infoSpec.innerHTML = html;
 
-      // Link button handler
+      // Link
       linkBtn.onclick = () => {
         const url = r['Link'];
         if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
@@ -190,7 +176,6 @@
         }
       };
 
-      // show
       messageEl.style.display = 'none';
       results.style.display = 'block';
       clearBtn.style.display = 'block';
