@@ -151,7 +151,7 @@
         html += `<div class="line">${line}</div>`;
       });
       html += '<br>';
-      const keys = ['CPU','GPU','OS','Panel Size','Resolution','Brightness','RAM','SSD'];
+      const keys = ['CPU','GPU','OS','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Include in the box','Battery','Power Supply'];
       keys.forEach(k => {
         html += `<div class="line">${k}: ${r[k] || '-'}</div>`;
       });
