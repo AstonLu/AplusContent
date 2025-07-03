@@ -17,7 +17,8 @@
     #clearBtn:hover { color:#555; }
     .message { text-align:center; color:#777; margin:1rem 0; font-style:italic; }
     .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; }
-    .section h2 { margin:0 0 1rem; font-size:1.25rem; }
+    .section h2 { margin:0 0 .5rem; font-size:1.25rem; }
+    .section p.note { margin:0 0 1rem; font-size:0.875rem; color:#555; }
     .line { margin:0.25rem 0; }
     .button { display:inline-block; background:#0072c6; color:#fff; text-decoration:none; font-weight:600; padding:.5rem 1rem; border-radius:4px; transition:background 0.2s; cursor:pointer; border:none; }
     .button:hover { background:#005fa3; }
@@ -41,6 +42,7 @@
       <button id="clearBtn">×</button>
     </div>
     <div class="message" id="message">Type a name to search (e.g. B1402CVA-NK7110X)</div>
+
     <div id="results-wrapper" style="display:none;">
       <!-- Name Section -->
       <div class="section">
@@ -49,11 +51,14 @@
         <div class="line" id="line-marketing"></div>
         <div class="line" id="line-title"></div>
       </div>
+
       <!-- Info + Spec Section -->
       <div class="section">
         <h2>Information & Spec</h2>
+        <p class="note">Copy and paste the content below directly into your e-commerce product description page.</p>
         <div id="info-spec"></div>
       </div>
+
       <!-- Materials Section -->
       <div class="section">
         <h2>Materials</h2>
@@ -61,10 +66,17 @@
         <button id="link-btn" class="button">Visit Link</button>
         <div class="tutor-box"><img id="tutor-img" src="tutor.jpg" alt="Tutor"></div>
       </div>
+
     </div>
+
     <button class="retryBtn" id="retryBtn" style="display:none;">🔍 Search Again</button>
   </div>
-  <div id="modal" class="modal"><span id="modal-close" class="modal-close">&times;</span><img id="modal-img"></div>
+
+  <div id="modal" class="modal">
+    <span id="modal-close" class="modal-close">&times;</span>
+    <img id="modal-img">
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script>
     let data = [];
@@ -86,7 +98,7 @@
     input.disabled = true;
     messageEl.textContent = 'Loading data, please wait...';
     Papa.parse('A+ Content Source(ForWeb).csv', { download:true, header:true, skipEmptyLines:true,
-      complete: ({data: d}) => {
+      complete: ({ data: d }) => {
         data = d;
         input.disabled = false;
         messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
@@ -96,62 +108,92 @@
 
     function onSearch() {
       const term = input.value.trim().toLowerCase();
-      clearBtn.style.display = term?'block':'none';
-      if(!term) { reset(); return; }
-      const row = data.find(r => (r['Product Name']||'').toLowerCase().includes(term));
-      if(row) showData(row);
+      clearBtn.style.display = term ? 'block' : 'none';
+      if (!term) { reset(); return; }
+      const row = data.find(r => (r['Product Name'] || '').toLowerCase().includes(term));
+      if (row) showData(row);
       else {
-        messageEl.textContent='No product found';
-        messageEl.style.display=''; results.style.display='none';
-        clearBtn.style.display='block'; retryBtn.style.display='block';
+        messageEl.textContent = 'No product found';
+        messageEl.style.display = '';
+        results.style.display = 'none';
+        clearBtn.style.display = 'block';
+        retryBtn.style.display = 'block';
       }
     }
 
     function showData(r) {
       // Name
-      lineProduct.textContent = `Product Name: ${r['Product Name']||'-'}`;
-      lineMarketing.textContent = `Marketing name: ${r['Marketing name']||'-'}`;
-      lineTitle.textContent = `Title: ${r['Title']||'-'}`;
-      // Info + Spec
+      lineProduct.textContent = r['Product Name'] || '-';
+      lineMarketing.textContent = r['Marketing name'] || '-';
+      lineTitle.textContent = r['Title'] || '-';
+
+      // Info & Spec
       let html = '';
       // Tagline
-      html += `<div class="line">${r['Tagline']||'-'}</div><br>`;
+      html += `<div class="line">${r['Tagline'] || '-'}</div><br>`;
       // KSP
-      (r['KSP']||'').split(/\r?\n/).forEach(line=>{
+      (r['KSP'] || '').split(/\r?\n/).forEach(line => {
         html += `<div class="line">${line}</div>`;
       });
       html += '<br>';
-      // Spec lines
-      const keys = ['CPU','GPU','OS','Panel Size','Resolution','Brightness','RAM','SSD','IO Port','Weight (with Battery)','Size','Expansion Slot','Include in the box','Battery','Power Supply','Security'];
-      keys.forEach(k=>{
-        let v = r[k]||'-';
-        if(k==='IO Port') v = v.split(/\r?\n/).join('<br>');
-        html += `<div class="line">${k}: ${v}</div>`;
+      // SPEC fields
+      const keys = ['CPU','GPU','OS','Panel Size','Resolution','Brightness','RAM','SSD'];
+      keys.forEach(k => {
+        html += `<div class="line">${k}: ${r[k] || '-'}</div>`;
+      });
+      // IO Port
+      html += '<div class="line">IO Port:</div>';
+      (r['IO Port'] || '').split(/\r?\n/).forEach(line => {
+        html += `<div class="line">${line}</div>`;
+      });
+      // continue other specs
+      const rest = ['Weight (with Battery)','Size','Expansion Slot','Include in the box','Battery','Power Supply','Security'];
+      rest.forEach(k => {
+        if (k === 'Expansion Slot') {
+          html += `<div class="line">Expansion Slot:</div>`;
+          (r[k] || '').split(/\r?\n/).forEach(line => {
+            html += `<div class="line">${line}</div>`;
+          });
+        } else {
+          html += `<div class="line">${k}: ${r[k] || '-'}</div>`;
+        }
       });
       infoSpec.innerHTML = html;
+
       // Link button handler
       linkBtn.onclick = () => {
         const url = r['Link'];
-        if(url && url.trim()!=='' && url!=='0') window.open(url,'_blank');
+        if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
         else {
           const t = linkBtn.textContent;
           linkBtn.textContent = 'Coming Soon';
-          setTimeout(()=>{ linkBtn.textContent = t; },2000);
+          setTimeout(() => { linkBtn.textContent = t; }, 2000);
         }
       };
-      // Show
-      messageEl.style.display='none'; results.style.display='block'; clearBtn.style.display='block'; retryBtn.style.display='block';
+
+      // show
+      messageEl.style.display = 'none';
+      results.style.display = 'block';
+      clearBtn.style.display = 'block';
+      retryBtn.style.display = 'block';
     }
 
     function reset() {
-      input.value=''; messageEl.textContent='Type a name to search (e.g. B1402CVA-NK7110X)'; messageEl.style.display=''; results.style.display='none'; clearBtn.style.display='none'; retryBtn.style.display='none'; input.focus();
+      input.value = '';
+      messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
+      messageEl.style.display = '';
+      results.style.display = 'none';
+      clearBtn.style.display = 'none';
+      retryBtn.style.display = 'none';
+      input.focus();
     }
 
-    clearBtn.addEventListener('click',reset);
-    retryBtn.addEventListener('click',reset);
-    tutorImg.addEventListener('click',()=>{ modalImg.src=tutorImg.src; modal.style.display='flex'; });
-    modalClose.addEventListener('click',()=>{ modal.style.display='none'; });
-    modal.addEventListener('click',e=>{ if(e.target===modal) modal.style.display='none'; });
+    clearBtn.addEventListener('click', reset);
+    retryBtn.addEventListener('click', reset);
+    tutorImg.addEventListener('click', () => { modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
+    modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+
     reset();
   </script>
 </body>
