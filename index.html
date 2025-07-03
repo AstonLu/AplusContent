@@ -142,7 +142,9 @@
       // Tagline
       html += `<div class="line">${r['Tagline'] || '-'}</div><br>`;
       // KSP
-      (r['KSP'] || '').split(/\r?\n/).forEach(line => {
+      (r['KSP'] || '').split(/
+?
+/).forEach(line => {
         html += `<div class="line">${line}</div>`;
       });
       html += '<br>';
