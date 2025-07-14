@@ -5,87 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ASUS Business Product Spec Search</title>
   <style>
-    /* 全局 */
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f6f8; margin:0; padding:2rem; color:#333; }
-    /* 容器 匯回 block 佈局，間距還原原始 */
-    .container { max-width:800px; margin:0 auto; padding:2rem; }
+    .container { max-width:800px; margin:0 auto; padding:2rem; text-align:center; }
     .header { text-align: center; }
     .logo { max-width:200px; margin:0 auto 1rem; display:block; }
     h1 { margin:0 0 .5rem; font-size:2rem; text-transform:uppercase; }
     .subtitle { margin:0 0 1.5rem; font-size:.875rem; color:#666; }
 
-    /* 搜尋區：回復原先尺寸 */
-    .search-container { position:relative; max-width:800px; margin:0 auto 1rem; }
+    .search-container { position:relative; max-width:800px; margin:0 auto 1rem; text-align:center; }
     #search { width:100%; padding:.75rem 1rem; font-size:1.25rem; border:1px solid #ccc; border-radius:4px; }
     #clearBtn { position:absolute; right:.5rem; top:50%; transform:translateY(-50%); background:none; border:none; font-size:1.25rem; color:#888; cursor:pointer; display:none; }
     #clearBtn:hover { color:#555; }
     .message { text-align:center; color:#777; margin:1rem 0; font-style:italic; }
 
-    /* 區塊樣式：還原原始排版與間距，移除 hover */
-    .section {
-      background:#fff;
-      border-radius:8px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.1);
-      padding:1rem;
-      margin-top:1rem;
-      /* 移除底線及互動 */
-      border-bottom:none;
-      transition:none;
-    }
-    /* 移除 .section:hover */
-    .section h2 {
-      margin:0 0 .5rem;
-      font-size:1.25rem;
-      color:#0072c6;
-      position:relative;
-      padding-bottom:8px;
-      user-select:none;
-    }
-    .section h2::after {
-      content:'';
-      position:absolute;
-      left:0; bottom:0;
-      width:48px; height:4px;
-      background:#0072c6;
-      border-radius:2px;
-    }
-    .note {
-      background:#fffae6; padding:.75rem 1rem; border-left:4px solid #f0c674;
-      color:#333; font-weight:600; margin:0 0 1rem; user-select:none;
-    }
-    .line { margin:0.25rem 0; }
-    .label { font-weight:600; user-select:none; }
-    .value { user-select:text; margin-left:0.5rem; }
+    .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; text-align:center; }
+    .section h2 { margin:0 0 .5rem; font-size:1.25rem; color:#0072c6; position:relative; padding-bottom:8px; user-select:none; }
+    .section h2::after { content:''; position:absolute; left:0; bottom:0; width:48px; height:4px; background:#0072c6; border-radius:2px; }
+    .note { background:#fffae6; padding:.75rem 1rem; border-left:4px solid #f0c674; color:#333; font-weight:600; margin:0 0 1rem; user-select:none; }
+    .line { margin:0.25rem 0; text-align:center; }
+    .label, .value { user-select:text; }
 
-    /* 按鈕樣式 */
     .button { display:inline-block; background:#0072c6; color:#fff; text-decoration:none; font-weight:600; padding:.5rem 1rem; border-radius:4px; transition: background .2s ease; cursor:pointer; border:none; }
     .button:hover { background:#005fa3; }
     .retryBtn { display:block; margin:1.5rem auto 0; padding:.5rem 1rem; border:none; border-radius:4px; background:#0072c6; color:#fff; cursor:pointer; }
     .retryBtn:hover { background:#005fa3; }
     .tutor-box img { width:100%; height:auto; cursor:zoom-in; display:block; border-radius:4px; margin-top:1rem; }
 
-    /* Spec 區塊 Copy 按鈕 */
     #info-spec { position: relative; padding-top:1rem; }
-    .copy-btn {
-      position: absolute; top:0; right:0;
-      background: #0072c6; color: #fff;
-      border: none; padding: .25rem .5rem;
-      border-radius:4px; cursor:pointer;
-      transition: background .2s ease;
-    }
+    .copy-btn { position: absolute; top:0; right:0; background: #0072c6; color: #fff; border: none; padding: .25rem .5rem; border-radius:4px; cursor:pointer; transition: background .2s ease; }
     .copy-btn:hover { background:#005fa3; }
 
-    /* Toast 提示 */
-    .toast {
-      visibility: hidden;
-      min-width:200px;
-      background:rgba(0,0,0,0.7);
-      color:#fff; text-align:center;
-      border-radius:4px; padding:.5rem;
-      position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%);
-      z-index:1001;
-      opacity:0; transition: visibility 0s, opacity .3s ease;
-    }
+    .toast { visibility: hidden; min-width:200px; background:rgba(0,0,0,0.7); color:#fff; text-align:center; border-radius:4px; padding:.5rem; position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:1001; opacity:0; transition: visibility 0s, opacity .3s ease; }
     .toast.show { visibility:visible; opacity:1; }
   </style>
 </head>
@@ -103,46 +53,28 @@
     <div class="message" id="message">Type a name to search (e.g. B1402CVA-NK7110X)</div>
 
     <div id="results-wrapper" style="display:none;">
-      <!-- Name Section -->
       <div class="section">
         <h2>Name</h2>
-        <div class="line"><span class="label">Product Name</span><span class="value" id="line-product"></span></div>
-        <div class="line"><span class="label">Marketing name</span><span class="value" id="line-marketing"></span></div>
-        <div class="line"><span class="label">Title</span><span class="value" id="line-title"></span></div>
+        <div class="line"><span class="label">Product Name: </span><span class="value" id="line-product"></span></div>
+        <div class="line"><span class="label">Marketing name: </span><span class="value" id="line-marketing"></span></div>
+        <div class="line"><span class="label">Title: </span><span class="value" id="line-title"></span></div>
       </div>
-
-      <!-- Info + Spec Section -->
       <div class="section">
         <h2>Information & Spec</h2>
         <div class="note">Salin dan tempel konten di bawah ini langsung ke halaman deskripsi produk e-commerce Anda.</div>
-        <div id="info-spec">
-          <button class="copy-btn" id="copySpecBtn">Copy Spec</button>
-        </div>
+        <div id="info-spec"></div>
       </div>
-
-      <!-- Materials Section -->
       <div class="section">
         <h2>Materials</h2>
-        <div class="note">
-          1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>
-          2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>
-          3. Konten carousel tanpa nomor bersifat opsional
-        </div>
+        <div class="note">1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>3. Konten carousel tanpa nomor bersifat opsional</div>
         <button id="link-btn" class="button">Visit Link</button>
         <div class="tutor-box"><img id="tutor-img" src="tutor.jpg" alt="Tutor"></div>
       </div>
-
     </div>
-
     <button class="retryBtn" id="retryBtn" style="display:none;">🔍 Search Again</button>
   </div>
 
-  <div id="modal" class="modal">
-    <span id="modal-close" class="modal-close">×</span>
-    <img id="modal-img">
-  </div>
-
-  <!-- Toast -->
+  <div id="modal" class="modal"><span id="modal-close" class="modal-close">×</span><img id="modal-img"></div>
   <div id="toast" class="toast">Copied to clipboard!</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
@@ -175,6 +107,7 @@
         input.disabled = false;
         messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
         input.addEventListener('input', onSearch);
+        input.addEventListener('keyup', onSearch);
       }
     });
 
@@ -199,74 +132,51 @@
     }
 
     function showData(r) {
-      // Name
       lineProduct.textContent = formatValue(r['Product Name']);
       lineMarketing.textContent = formatValue(r['Marketing name']);
       lineTitle.textContent = formatValue(r['Title']);
 
-      // Info & Spec
       let lines = [];
       lines.push(formatValue(r['Tagline']));
-      // KSP lines
-      (r['KSP'] || '').split(/
-?
-/).forEach(line => { lines.push(formatValue(line)); });
-      // Key:Value specs
+      (r['KSP'] || '').split(/\r?\n/).forEach(line => { lines.push(formatValue(line)); });
       const keys = ['CPU','GPU','OS','Office','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Battery','Power Supply'];
       keys.forEach(k => { lines.push(`${k}: ${formatValue(r[k])}`); });
-      // Multiline lists
       ['Include in the box','IO Port','Expansion Slot','Security'].forEach(field => {
         lines.push(`${field}:`);
-        (r[field] || '').split(/
-?
-/).forEach(item => { lines.push(formatValue(item)); });
+        (r[field] || '').split(/\r?\n/).forEach(item => { lines.push(formatValue(item)); });
       });
-      // 渲染
+
       let html = lines.map(txt => `<div class="line">${txt}</div>`).join('');
       infoSpec.innerHTML = `<button class="copy-btn" id="copyAllBtn">Copy All</button>${html}`;
 
-      // Bind Copy All
       document.getElementById('copyAllBtn').onclick = () => {
-        const textToCopy = lines.join('
-');
+        const textToCopy = lines.join('\n');
         navigator.clipboard.writeText(textToCopy).then(() => {
           toast.classList.add('show');
           setTimeout(() => toast.classList.remove('show'), 2000);
         });
       };
 
-      // Link
       linkBtn.onclick = () => {
         const url = r['Link'];
         if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
         else {
-          const originalText = linkBtn.textContent;
+          const original = linkBtn.textContent;
           linkBtn.textContent = 'Coming Soon';
-          setTimeout(() => { linkBtn.textContent = originalText; }, 2000);
+          setTimeout(() => linkBtn.textContent = original, 2000);
         }
       };
 
-      messageEl.style.display = 'none';
-      results.style.display = 'block';
-      clearBtn.style.display = 'block';
-      retryBtn.style.display = 'block';
+      messageEl.style.display = 'none'; results.style.display = 'block'; clearBtn.style.display = 'block'; retryBtn.style.display = 'block';
     }
 
-    function reset() {
-      input.value = '';
-      messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
-      messageEl.style.display = '';
-      results.style.display = 'none';
-      clearBtn.style.display = 'none';
-      retryBtn.style.display = 'none';
-      input.focus();
-    }
+    function reset() { input.value = ''; messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)'; messageEl.style.display = ''; results.style.display = 'none'; clearBtn.style.display = 'none'; retryBtn.style.display = 'none'; input.focus(); }
 
     clearBtn.addEventListener('click', reset);
     retryBtn.addEventListener('click', reset);
-    tutorImg.addEventListener('click', () => { modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
-    modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
-    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+    tutorImg.addEventListener('click', ()=>{ modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
+    modalClose.addEventListener('click', ()=>{ modal.style.display = 'none'; });
+    modal.addEventListener('click', e => { if(e.target===modal) modal.style.display = 'none'; });
 
     reset();
   </script>
