@@ -6,7 +6,7 @@
   <title>ASUS Business Product Spec Search</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f6f8; margin:0; padding:2rem; color:#333; }
-    .container { max-width:800px; margin:0 auto; padding:2rem; }
+    .container { max-width:800px; margin:0 auto; }
     .header { text-align: center; }
     .logo { max-width:200px; margin:0 auto 1rem; display:block; }
     h1 { margin:0 0 .5rem; font-size:2rem; text-transform:uppercase; }
@@ -53,6 +53,7 @@
     <div class="message" id="message">Type a name to search (e.g. B1402CVA-NK7110X)</div>
 
     <div id="results-wrapper" style="display:none;">
+      <!-- Name Section -->
       <div class="section">
         <h2>Name</h2>
         <div class="line"><span class="label">Product Name</span><span class="value" id="line-product"></span></div>
@@ -60,12 +61,14 @@
         <div class="line"><span class="label">Title</span><span class="value" id="line-title"></span></div>
       </div>
 
+      <!-- Info + Spec Section -->
       <div class="section">
         <h2>Information & Spec</h2>
         <div class="note">Salin dan tempel konten di bawah ini langsung ke halaman deskripsi produk e-commerce Anda.</div>
         <div id="info-spec"></div>
       </div>
 
+      <!-- Materials Section -->
       <div class="section">
         <h2>Materials</h2>
         <div class="note">1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>3. Konten carousel tanpa nomor bersifat opsional</div>
@@ -102,6 +105,12 @@
     const modalClose = document.getElementById('modal-close');
     const toast = document.getElementById('toast');
 
+    // Utility to replace empty or '0' values
+    function formatValue(val) {
+      if (!val || val.trim() === '' || val.trim() === '0') return 'No Available';
+      return val;
+    }
+
     messageEl.textContent = 'Loading data, please wait...';
     input.disabled = true;
     Papa.parse('A+ Content Source(ForWeb).csv', {
@@ -127,34 +136,34 @@
         retryBtn.style.display = 'block';
         return;
       }
-      // Name
-      lineProduct.textContent = row['Product Name'] || '-';
-      lineMarketing.textContent = row['Marketing name'] || '-';
-      lineTitle.textContent = row['Title'] || '-';
+      // Populate Name
+      lineProduct.textContent = formatValue(row['Product Name']);
+      lineMarketing.textContent = formatValue(row['Marketing name']);
+      lineTitle.textContent = formatValue(row['Title']);
 
-      // Info & Spec
+      // Build Spec HTML
       let html = '<button class="copy-btn" id="copyBtn">Copy All</button>';
-      html += `<div class="line">${row['Tagline'] || '-'}<br><br></div>`;
-      (row['KSP'] || '').split(/\r?\n/).forEach(l => html += `<div class="line">${l}</div>`);
+      html += `<div class="line">${formatValue(row['Tagline'])}<br><br></div>`;
+      (row['KSP'] || '').split(/\r?\n/).forEach(l => html += `<div class="line">${formatValue(l)}</div>`);
       html += '<br>';
       const keys = ['CPU','GPU','OS','Office','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Battery','Power Supply'];
-      keys.forEach(k => html += `<div class="line">${k}: ${row[k] || '-'}</div>`);
+      keys.forEach(k => html += `<div class="line">${k}: ${formatValue(row[k])}</div>`);
       ['Include in the box','IO Port','Expansion Slot','Security'].forEach(f => {
         html += `<div class="line">${f}:</div>`;
-        (row[f] || '').split(/\r?\n/).forEach(i => html += `<div class="line">${i}</div>`);
+        (row[f] || '').split(/\r?\n/).forEach(i => html += `<div class="line">${formatValue(i)}</div>`);
       });
       infoSpec.innerHTML = html;
 
+      // Copy All
       document.getElementById('copyBtn').onclick = () => {
         let text = [];
-        text.push(row['Tagline'] || '');
+        text.push(formatValue(row['Tagline'])); text.push('');
+        (row['KSP']||'').split(/\r?\n/).forEach(l => text.push(formatValue(l)));
         text.push('');
-        (row['KSP']||'').split(/\r?\n/).forEach(l => text.push(l));
-        text.push('');
-        keys.forEach(k => text.push(k + ': ' + (row[k]||'')));
+        keys.forEach(k => text.push(`${k}: ${formatValue(row[k])}`));
         ['Include in the box','IO Port','Expansion Slot','Security'].forEach(f => {
-          text.push(f + ':');
-          (row[f]||'').split(/\r?\n/).forEach(i => text.push(i));
+          text.push(`${f}:`);
+          (row[f]||'').split(/\r?\n/).forEach(i => text.push(formatValue(i)));
         });
         navigator.clipboard.writeText(text.join('\n')).then(() => {
           toast.textContent = 'Copied to clipboard!'; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'),2000);
@@ -168,6 +177,7 @@
         else alert('Coming Soon');
       };
 
+      // Show results
       messageEl.style.display = 'none';
       results.style.display = 'block';
       retryBtn.style.display = 'block';
