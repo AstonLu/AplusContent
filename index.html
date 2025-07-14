@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ASUS Business Product Spec Search</title>
   <style>
-    /* 全局 */
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f6f8; margin:0; padding:2rem; color:#333; }
     .container { max-width:800px; margin:0 auto; padding:2rem; }
     .header { text-align: center; }
@@ -13,14 +12,13 @@
     h1 { margin:0 0 .5rem; font-size:2rem; text-transform:uppercase; }
     .subtitle { margin:0 0 1.5rem; font-size:.875rem; color:#666; }
 
-    /* 搜尋區：置中顯示，寬度與 Name 區塊內緣對齊 */
-    .search-container { position:relative; max-width: calc(100% - 2rem); margin:0 auto 1rem; text-align:center; }
+    .search-container { position:relative; width:100%; margin:0 auto 1rem; text-align:center; }
+    .container.results-mode .search-container { text-align:left; margin:0 0 1rem; }
     #search { width:100%; padding:.75rem 1rem; font-size:1.25rem; border:1px solid #ccc; border-radius:4px; }
     #clearBtn { position:absolute; right:.5rem; top:50%; transform:translateY(-50%); background:none; border:none; font-size:1.25rem; color:#888; cursor:pointer; display:none; }
     #clearBtn:hover { color:#555; }
     .message { text-align:center; color:#777; margin:1rem 0; font-style:italic; }
 
-    /* 結果區塊：恢復左對齊，區塊間距原樣 */
     .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; text-align:left; }
     .section h2 { margin:0 0 .5rem; font-size:1.25rem; color:#0072c6; position:relative; padding-bottom:8px; user-select:none; }
     .section h2::after { content:''; position:absolute; left:0; bottom:0; width:48px; height:4px; background:#0072c6; border-radius:2px; }
@@ -29,40 +27,26 @@
     .label { font-weight:600; user-select:text; }
     .value { user-select:text; margin-left:0.5rem; }
 
-    /* 按鈕 */
     .button { display:inline-block; background:#0072c6; color:#fff; text-decoration:none; font-weight:600; padding:.5rem 1rem; border-radius:4px; transition: background .2s ease; cursor:pointer; border:none; }
     .button:hover { background:#005fa3; }
     .retryBtn { display:block; margin:1.5rem auto 0; padding:.5rem 1rem; border:none; border-radius:4px; background:#0072c6; color:#fff; cursor:pointer; }
     .retryBtn:hover { background:#005fa3; }
     .tutor-box img { width:100%; height:auto; cursor:zoom-in; display:block; border-radius:4px; margin-top:1rem; }
 
-    /* Modal */
-    .modal {
-      display:none;
-      position:fixed;
-      z-index:1000;
-      top:0; left:0;
-      width:100%; height:100%;
-      background:rgba(0,0,0,0.8);
-      align-items:center;
-      justify-content:center;
-      display:flex;
-    }
-    .modal img { max-width:90%; max-height:90%; border-radius:4px; }
-    .modal-close { position:absolute; top:1rem; right:1rem; font-size:2rem; color:#fff; cursor:pointer; }
-
-    /* Spec 區塊 Copy 按鈕 */
     #info-spec { position: relative; padding-top:1rem; }
     .copy-btn { position: absolute; top:0; right:0; background: #0072c6; color: #fff; border: none; padding: .25rem .5rem; border-radius:4px; cursor:pointer; transition: background .2s ease; }
     .copy-btn:hover { background:#005fa3; }
 
-    /* Toast 提示 */
+    .modal { display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; }
+    .modal img { max-width:90%; max-height:90%; border-radius:4px; }
+    .modal-close { position:absolute; top:1rem; right:1rem; font-size:2rem; color:#fff; cursor:pointer; }
+
     .toast { visibility: hidden; min-width:200px; background:rgba(0,0,0,0.7); color:#fff; text-align:center; border-radius:4px; padding:.5rem; position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:1001; opacity:0; transition: visibility 0s, opacity .3s ease; }
     .toast.show { visibility:visible; opacity:1; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="container">
     <div class="header">
       <img src="asus-logo.png" class="logo" alt="ASUS Business Product Spec Search">
       <h1>ASUS Business Product Spec Search</h1>
@@ -88,11 +72,7 @@
       </div>
       <div class="section">
         <h2>Materials</h2>
-        <div class="note">
-          1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>
-          2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>
-          3. Konten carousel tanpa nomor bersifat opsional
-        </div>
+        <div class="note">1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>3. Konten carousel tanpa nomor bersifat opsional</div>
         <button id="link-btn" class="button">Visit Link</button>
         <div class="tutor-box"><img id="tutor-img" src="tutor.jpg" alt="Tutor"></div>
       </div>
@@ -100,11 +80,15 @@
     <button class="retryBtn" id="retryBtn" style="display:none;">🔍 Search Again</button>
   </div>
 
-  <div id="modal" class="modal"><span id="modal-close" class="modal-close">×</span><img id="modal-img"></div>
+  <div id="modal" class="modal">
+    <span id="modal-close" class="modal-close">×</span>
+    <img id="modal-img">
+  </div>
   <div id="toast" class="toast">Copied to clipboard!</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script>
+    const container = document.getElementById('container');
     let data = [];
     const input = document.getElementById('search');
     const clearBtn = document.getElementById('clearBtn');
@@ -144,11 +128,7 @@
       const row = data.find(r => (r['Product Name'] || '').toLowerCase().includes(term));
       if (row) showData(row);
       else {
-        messageEl.textContent = 'No product found';
-        messageEl.style.display = '';
-        results.style.display = 'none';
-        clearBtn.style.display = 'block';
-        retryBtn.style.display = 'block';
+        messageEl.textContent = 'No product found'; messageEl.style.display = ''; results.style.display = 'none'; clearBtn.style.display = 'block'; retryBtn.style.display = 'block';
       }
     }
 
@@ -158,68 +138,14 @@
     }
 
     function showData(r) {
+      container.classList.add('results-mode');
       lineProduct.textContent = formatValue(r['Product Name']);
       lineMarketing.textContent = formatValue(r['Marketing name']);
       lineTitle.textContent = formatValue(r['Title']);
-
-      let lines = [];
-      // Tagline then blank line
-      lines.push(formatValue(r['Tagline']));
-      lines.push('');
-      // KSP then blank line
-      (r['KSP'] || '').split(/\r?\n/).forEach(line => { lines.push(formatValue(line)); });
-      lines.push('');
-      // Spec key:value
-      const keys = ['CPU','GPU','OS','Office','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Battery','Power Supply'];
-      keys.forEach(k => { lines.push(`${k}: ${formatValue(r[k])}`); });
-      // Multiline lists
-      ['Include in the box','IO Port','Expansion Slot','Security'].forEach(field => {
-        lines.push(`${field}:`);
-        (r[field] || '').split(/\r?\n/).forEach(item => { lines.push(formatValue(item)); });
-      });
-
-      let html = `<button class="copy-btn" id="copyAllBtn">Copy All</button>`;
-      lines.forEach(txt => {
-        if (txt === '') html += '<br>';
-        else html += `<div class="line">${txt}</div>`;
-      });
-      infoSpec.innerHTML = html;
-      document.getElementById('copyAllBtn').onclick = () => {
-        navigator.clipboard.writeText(lines.join('\n')).then(() => {
-          toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
-        });
-      };
-
-      // Link button
-      linkBtn.onclick = () => {
-        const url = r['Link'];
-        if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
-        else { const original = linkBtn.textContent; linkBtn.textContent = 'Coming Soon'; setTimeout(() => linkBtn.textContent = original, 2000); }
-      };
-
-      messageEl.style.display = 'none';
-      results.style.display = 'block';
-      clearBtn.style.display = 'block';
-      retryBtn.style.display = 'block';
-    }
-
-    function reset() {
-      input.value = '';
-      messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
-      messageEl.style.display = '';
-      results.style.display = 'none';
-      clearBtn.style.display = 'none';
-      retryBtn.style.display = 'none';
-      input.focus();
-    }
-
-    clearBtn.addEventListener('click', reset);
-    retryBtn.addEventListener('click', reset);
-    tutorImg.addEventListener('click', () => { modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
-    modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
-    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
-
-    reset();
-  </script>
-</body>
-</html>
+      let lines = []; lines.push(formatValue(r['Tagline'])); lines.push(''); (r['KSP']||'').split(/\r?\n/).forEach(l=>lines.push(formatValue(l))); lines.push('');
+      const keys=['CPU','GPU','OS','Office','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Battery','Power Supply']; keys.forEach(k=>lines.push(k+': '+formatValue(r[k])));
+      ['Include in the box','IO Port','Expansion Slot','Security'].forEach(f=>{ lines.push(f+':'); (r[f]||'').split(/\r?\n/).forEach(i=>lines.push(formatValue(i))); });
+      let html='<button class="copy-btn" id="copyAllBtn">Copy All</button>'; lines.forEach(txt=>html+=txt===''?'<br>':`<div class="line">${txt}</div>`);
+      infoSpec.innerHTML=html; document.getElementById('copyAllBtn').onclick=()=>{navigator.clipboard.writeText(lines.join('\n')).then(()=>{toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2000);});};
+      linkBtn.onclick=()=>{const u=r['Link'];if(u&&u.trim()!==''&&u!=='0')window.open(u,'_blank');else{const t=linkBtn.textContent;linkBtn.textContent='Coming Soon';setTimeout(()=>linkBtn.textContent=t,2000);}};
+      messageEl.style.display='none';results.style
