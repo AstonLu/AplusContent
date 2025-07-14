@@ -116,14 +116,7 @@
       header: true,
       skipEmptyLines: true,
       complete: ({ data: d }) => {
-        // 移除 CSV 中多餘的 Part Number 欄位
-        data = d.map(row => {
-          Object.keys(row).forEach(key => {
-            if (key === 'Part Number') delete row[key];
-          });
-          return row;
-        });
-        data = d;
+        data = d.map(row => { delete row['Part Number']; return row; });
         input.disabled = false;
         messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
         input.addEventListener('input', onSearch);
@@ -154,59 +147,37 @@
       // Info & Spec
       let html = '';
       html += `<div class="line">${r['Tagline'] || '-'}</div><br>`;
-      (r['KSP'] || '').split(/\r?\n/).forEach(line => {
-        html += `<div class="line">${line}</div>`;
-      });
+      (r['KSP'] || '').split(/\r?\n/).forEach(line => { html += `<div class="line">${line}</div>`; });
       html += '<br>';
-      const keys = ['CPU','GPU','OS','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Include in the box','Battery','Power Supply'];
-      keys.forEach(k => {
-        html += `<div class="line">${k}: ${r[k] || '-'}</div>`;
-      });
+      const keys = ['CPU','GPU','OS','Office','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Battery','Power Supply'];
+      keys.forEach(k => { html += `<div class="line">${k}: ${r[k] || '-'}</div>`; });
+      html += '<div class="line">Include in the box:</div>';
+      (r['Include in the box'] || '').split(/\r?\n/).forEach(line => { html += `<div class="line">${line}</div>`; });
       html += '<div class="line">IO Port:</div>';
-      (r['IO Port'] || '').split(/\r?\n/).forEach(line => {
-        html += `<div class="line">${line}</div>`;
-      });
+      (r['IO Port'] || '').split(/\r?\n/).forEach(line => { html += `<div class="line">${line}</div>`; });
       html += '<div class="line">Expansion Slot:</div>';
-      (r['Expansion Slot'] || '').split(/\r?\n/).forEach(line => {
-        html += `<div class="line">${line}</div>`;
-      });
+      (r['Expansion Slot'] || '').split(/\r?\n/).forEach(line => { html += `<div class="line">${line}</div>`; });
       html += '<div class="line">Security:</div>';
-      (r['Security'] || '').split(/\r?\n/).forEach(line => {
-        html += `<div class="line">${line}</div>`;
-      });
+      (r['Security'] || '').split(/\r?\n/).forEach(line => { html += `<div class="line">${line}</div>`; });
       infoSpec.innerHTML = html;
 
       // Link
       linkBtn.onclick = () => {
         const url = r['Link'];
         if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
-        else {
-          const t = linkBtn.textContent;
-          linkBtn.textContent = 'Coming Soon';
-          setTimeout(() => { linkBtn.textContent = t; }, 2000);
-        }
+        else { const t = linkBtn.textContent; linkBtn.textContent = 'Coming Soon'; setTimeout(() => { linkBtn.textContent = t; },2000); }
       };
 
-      messageEl.style.display = 'none';
-      results.style.display = 'block';
-      clearBtn.style.display = 'block';
-      retryBtn.style.display = 'block';
+      messageEl.style.display = 'none'; results.style.display = 'block'; clearBtn.style.display = 'block'; retryBtn.style.display = 'block';
     }
 
     function reset() {
-      input.value = '';
-      messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
-      messageEl.style.display = '';
-      results.style.display = 'none';
-      clearBtn.style.display = 'none';
-      retryBtn.style.display = 'none';
-      input.focus();
-    }
+      input.value = ''; messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)'; messageEl.style.display = ''; results.style.display = 'none'; clearBtn.style.display = 'none'; retryBtn.style.display = 'none'; input.focus(); }
 
     clearBtn.addEventListener('click', reset);
     retryBtn.addEventListener('click', reset);
-    tutorImg.addEventListener('click', () => { modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
-    modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+    tutorImg.addEventListener('click', ()=>{ modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
+    modalClose.addEventListener('click', ()=>{ modal.style.display = 'none'; });
     modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
     reset();
