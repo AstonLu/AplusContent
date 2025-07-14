@@ -5,36 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ASUS Business Product Spec Search</title>
   <style>
+    /* 全局 */
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f6f8; margin:0; padding:2rem; color:#333; }
-    .container { max-width:800px; margin:0 auto; padding:2rem; text-align:center; }
+    .container { max-width:800px; margin:0 auto; padding:2rem; }
     .header { text-align: center; }
     .logo { max-width:200px; margin:0 auto 1rem; display:block; }
     h1 { margin:0 0 .5rem; font-size:2rem; text-transform:uppercase; }
     .subtitle { margin:0 0 1.5rem; font-size:.875rem; color:#666; }
 
-    .search-container { position:relative; max-width:800px; margin:0 auto 1rem; text-align:center; }
+    /* 搜尋區：置中顯示，寬度與 Name 區塊內緣對齊 */
+    .search-container { position:relative; max-width: calc(100% - 2rem); margin:0 auto 1rem; text-align:center; }
     #search { width:100%; padding:.75rem 1rem; font-size:1.25rem; border:1px solid #ccc; border-radius:4px; }
     #clearBtn { position:absolute; right:.5rem; top:50%; transform:translateY(-50%); background:none; border:none; font-size:1.25rem; color:#888; cursor:pointer; display:none; }
     #clearBtn:hover { color:#555; }
     .message { text-align:center; color:#777; margin:1rem 0; font-style:italic; }
 
-    .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; text-align:center; }
+    /* 結果區塊：恢復左對齊，區塊間距原樣 */
+    .section { background:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:1rem; margin-top:1rem; text-align:left; }
     .section h2 { margin:0 0 .5rem; font-size:1.25rem; color:#0072c6; position:relative; padding-bottom:8px; user-select:none; }
     .section h2::after { content:''; position:absolute; left:0; bottom:0; width:48px; height:4px; background:#0072c6; border-radius:2px; }
     .note { background:#fffae6; padding:.75rem 1rem; border-left:4px solid #f0c674; color:#333; font-weight:600; margin:0 0 1rem; user-select:none; }
-    .line { margin:0.25rem 0; text-align:center; }
-    .label, .value { user-select:text; }
+    .line { margin:0.25rem 0; text-align:left; }
+    .label { font-weight:600; user-select:text; }
+    .value { user-select:text; margin-left:0.5rem; }
 
+    /* 按鈕 */
     .button { display:inline-block; background:#0072c6; color:#fff; text-decoration:none; font-weight:600; padding:.5rem 1rem; border-radius:4px; transition: background .2s ease; cursor:pointer; border:none; }
     .button:hover { background:#005fa3; }
     .retryBtn { display:block; margin:1.5rem auto 0; padding:.5rem 1rem; border:none; border-radius:4px; background:#0072c6; color:#fff; cursor:pointer; }
     .retryBtn:hover { background:#005fa3; }
     .tutor-box img { width:100%; height:auto; cursor:zoom-in; display:block; border-radius:4px; margin-top:1rem; }
 
+    /* Spec 區塊 Copy 按鈕 */
     #info-spec { position: relative; padding-top:1rem; }
     .copy-btn { position: absolute; top:0; right:0; background: #0072c6; color: #fff; border: none; padding: .25rem .5rem; border-radius:4px; cursor:pointer; transition: background .2s ease; }
     .copy-btn:hover { background:#005fa3; }
 
+    /* Toast 提示 */
     .toast { visibility: hidden; min-width:200px; background:rgba(0,0,0,0.7); color:#fff; text-align:center; border-radius:4px; padding:.5rem; position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:1001; opacity:0; transition: visibility 0s, opacity .3s ease; }
     .toast.show { visibility:visible; opacity:1; }
   </style>
@@ -55,9 +62,9 @@
     <div id="results-wrapper" style="display:none;">
       <div class="section">
         <h2>Name</h2>
-        <div class="line"><span class="label">Product Name: </span><span class="value" id="line-product"></span></div>
-        <div class="line"><span class="label">Marketing name: </span><span class="value" id="line-marketing"></span></div>
-        <div class="line"><span class="label">Title: </span><span class="value" id="line-title"></span></div>
+        <div class="line"><span class="label">Product Name:</span><span class="value" id="line-product"></span></div>
+        <div class="line"><span class="label">Marketing name:</span><span class="value" id="line-marketing"></span></div>
+        <div class="line"><span class="label">Title:</span><span class="value" id="line-title"></span></div>
       </div>
       <div class="section">
         <h2>Information & Spec</h2>
@@ -66,7 +73,11 @@
       </div>
       <div class="section">
         <h2>Materials</h2>
-        <div class="note">1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>3. Konten carousel tanpa nomor bersifat opsional</div>
+        <div class="note">
+          1. Klik tombol di bawah untuk mengakses cloud drive dan download file<br>
+          2. Konten carousel harus mengikuti urutan penomoran file (1–9) di dalam folder<br>
+          3. Konten carousel tanpa nomor bersifat opsional
+        </div>
         <button id="link-btn" class="button">Visit Link</button>
         <div class="tutor-box"><img id="tutor-img" src="tutor.jpg" alt="Tutor"></div>
       </div>
@@ -148,23 +159,17 @@
 
       let html = lines.map(txt => `<div class="line">${txt}</div>`).join('');
       infoSpec.innerHTML = `<button class="copy-btn" id="copyAllBtn">Copy All</button>${html}`;
-
       document.getElementById('copyAllBtn').onclick = () => {
         const textToCopy = lines.join('\n');
         navigator.clipboard.writeText(textToCopy).then(() => {
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 2000);
+          toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
         });
       };
 
       linkBtn.onclick = () => {
         const url = r['Link'];
         if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
-        else {
-          const original = linkBtn.textContent;
-          linkBtn.textContent = 'Coming Soon';
-          setTimeout(() => linkBtn.textContent = original, 2000);
-        }
+        else { const original = linkBtn.textContent; linkBtn.textContent = 'Coming Soon'; setTimeout(() => linkBtn.textContent = original, 2000); }
       };
 
       messageEl.style.display = 'none'; results.style.display = 'block'; clearBtn.style.display = 'block'; retryBtn.style.display = 'block';
