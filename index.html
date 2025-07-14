@@ -36,6 +36,21 @@
     .retryBtn:hover { background:#005fa3; }
     .tutor-box img { width:100%; height:auto; cursor:zoom-in; display:block; border-radius:4px; margin-top:1rem; }
 
+    /* Modal */
+    .modal {
+      display:none;
+      position:fixed;
+      z-index:1000;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.8);
+      align-items:center;
+      justify-content:center;
+      display:flex;
+    }
+    .modal img { max-width:90%; max-height:90%; border-radius:4px; }
+    .modal-close { position:absolute; top:1rem; right:1rem; font-size:2rem; color:#fff; cursor:pointer; }
+
     /* Spec 區塊 Copy 按鈕 */
     #info-spec { position: relative; padding-top:1rem; }
     .copy-btn { position: absolute; top:0; right:0; background: #0072c6; color: #fff; border: none; padding: .25rem .5rem; border-radius:4px; cursor:pointer; transition: background .2s ease; }
@@ -148,40 +163,57 @@
       lineTitle.textContent = formatValue(r['Title']);
 
       let lines = [];
+      // Tagline then blank line
       lines.push(formatValue(r['Tagline']));
+      lines.push('');
+      // KSP then blank line
       (r['KSP'] || '').split(/\r?\n/).forEach(line => { lines.push(formatValue(line)); });
+      lines.push('');
+      // Spec key:value
       const keys = ['CPU','GPU','OS','Office','Panel Size','Resolution','Brightness','RAM','SSD','Weight (with Battery)','Size','Battery','Power Supply'];
       keys.forEach(k => { lines.push(`${k}: ${formatValue(r[k])}`); });
+      // Multiline lists
       ['Include in the box','IO Port','Expansion Slot','Security'].forEach(field => {
         lines.push(`${field}:`);
         (r[field] || '').split(/\r?\n/).forEach(item => { lines.push(formatValue(item)); });
       });
 
-      let html = lines.map(txt => `<div class="line">${txt}</div>`).join('');
+      const html = lines.map(txt => `<div class="line">${txt}</div>`).join('');
       infoSpec.innerHTML = `<button class="copy-btn" id="copyAllBtn">Copy All</button>${html}`;
       document.getElementById('copyAllBtn').onclick = () => {
-        const textToCopy = lines.join('\n');
-        navigator.clipboard.writeText(textToCopy).then(() => {
+        navigator.clipboard.writeText(lines.join('\n')).then(() => {
           toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
         });
       };
 
+      // Link button
       linkBtn.onclick = () => {
         const url = r['Link'];
         if (url && url.trim() !== '' && url !== '0') window.open(url, '_blank');
         else { const original = linkBtn.textContent; linkBtn.textContent = 'Coming Soon'; setTimeout(() => linkBtn.textContent = original, 2000); }
       };
 
-      messageEl.style.display = 'none'; results.style.display = 'block'; clearBtn.style.display = 'block'; retryBtn.style.display = 'block';
+      messageEl.style.display = 'none';
+      results.style.display = 'block';
+      clearBtn.style.display = 'block';
+      retryBtn.style.display = 'block';
     }
 
-    function reset() { input.value = ''; messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)'; messageEl.style.display = ''; results.style.display = 'none'; clearBtn.style.display = 'none'; retryBtn.style.display = 'none'; input.focus(); }
+    function reset() {
+      input.value = '';
+      messageEl.textContent = 'Type a name to search (e.g. B1402CVA-NK7110X)';
+      messageEl.style.display = '';
+      results.style.display = 'none';
+      clearBtn.style.display = 'none';
+      retryBtn.style.display = 'none';
+      input.focus();
+    }
 
     clearBtn.addEventListener('click', reset);
     retryBtn.addEventListener('click', reset);
-    tutorImg.addEventListener('click', ()=>{ modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
-    modalClose.addEventListener('click', ()=>{ modal.style.display = 'none'; });
-    modal.addEventListener('click', e => { if(e.target===modal) modal.style.display = 'none'; });
+    tutorImg.addEventListener('click', () => { modalImg.src = tutorImg.src; modal.style.display = 'flex'; });
+    modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 
     reset();
   </script>
