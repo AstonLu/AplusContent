@@ -178,8 +178,12 @@
         (r[field] || '').split(/\r?\n/).forEach(item => { lines.push(formatValue(item)); });
       });
 
-      const html = lines.map(txt => `<div class="line">${txt}</div>`).join('');
-      infoSpec.innerHTML = `<button class="copy-btn" id="copyAllBtn">Copy All</button>${html}`;
+      let html = `<button class="copy-btn" id="copyAllBtn">Copy All</button>`;
+      lines.forEach(txt => {
+        if (txt === '') html += '<br>';
+        else html += `<div class="line">${txt}</div>`;
+      });
+      infoSpec.innerHTML = html;
       document.getElementById('copyAllBtn').onclick = () => {
         navigator.clipboard.writeText(lines.join('\n')).then(() => {
           toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
